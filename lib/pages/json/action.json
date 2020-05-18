@@ -1,0 +1,43 @@
+[
+  {
+    "actionID": 1,
+    "actionName": "深蹲",
+    "actionType": "base-times"
+  },
+  {
+    "actionID": 2,
+    "actionName": "卧推",
+    "actionType": "base-times"
+  },
+  {
+    "actionID": 3,
+    "actionName": "硬拉",
+    "actionType": "base-times"
+  },
+  {
+    "actionID": 4,
+    "actionName": "跑步",
+    "actionType": "base-time"
+  },
+  {
+    "actionID": 5,
+    "actionName": "平板支撑",
+    "actionType": "base-onlytime"
+  },
+  {
+    "actionID": 6,
+    "actionName": "短距离折返跑",
+    "actionType": "base-times"
+  },
+  {
+    "actionID": 7,
+    "actionName": "zgw-腿举",
+    "actionType": "user-times"
+  },
+  {
+    "actionID": 8,
+    "actionName": "zgw-倒立",
+    "actionType": "user-onlytime"
+  }
+  
+]
