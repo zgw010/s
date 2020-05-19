@@ -1,121 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../model.dart';
 
 // import 'package:flutter/foundation.dart';
-class DataDetails extends StatefulWidget {
-  DataDetails({Key key}) : super(key: key);
+class DataDetailsPage extends StatefulWidget {
+  DataDetailsPage({Key key}) : super(key: key);
 
   @override
-  _DataDetailsState createState() => _DataDetailsState();
+  _DataDetailsPageState createState() => _DataDetailsPageState();
 }
 
-class _DataDetailsState extends State<DataDetails> {
-  // var _list = <Widget>[];
+class _DataDetailsPageState extends State<DataDetailsPage> {
+  var dataList = [];
+  getData() async {
+    try {
+      var response;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userInfoString = prefs.getString('userInfo');
+      Map<String, dynamic> userInfo = jsonDecode(userInfoString);
+      response = await http.get(
+        "${SURL.getData}?userID=${userInfo['UserID'] ?? ''}",
+      );
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        print(jsonDecode(body['data']['DataDetails']));
+        setState(() {
+          dataList = jsonDecode(body['data']['DataDetails']);
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
-  var startTime = '2020-4-1', endTime = '2020-5-1';
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var list = [
-      {
-        "actionID": "1",
-        "actionName": "深蹲",
-        "actionType": "base-times",
-        "actionGroupsNum": 6,
-        "actionTimes": 10,
-        "actionTime": 10,
-        "actionDistance": 10,
-        "actionDetails": "",
-        "actionImgURL": "",
-        "actionVideoURL": "",
-        "actionMoreURL": "",
-        "actionCompleted": false
-      },
-      {
-        "actionID": "2",
-        "actionName": "硬拉",
-        "actionType": "base-times",
-        "actionGroupsNum": 6,
-        "actionTimes": 10,
-        "actionTime": 10,
-        "actionDistance": 10.00,
-        "actionDetails": "",
-        "actionImgURL": "",
-        "actionVideoURL": "",
-        "actionMoreURL": "",
-        "actionCompleted": false
-      },
-      {
-        "actionID": "3",
-        "actionName": "卧推",
-        "actionType": "base-times",
-        "actionGroupsNum": 6,
-        "actionTimes": 10,
-        "actionTime": 10,
-        "actionDistance": 10.00,
-        "actionDetails": "",
-        "actionImgURL": "",
-        "actionVideoURL": "",
-        "actionMoreURL": "",
-        "actionCompleted": false
-      },
-      {
-        "actionID": "4",
-        "actionName": "跑步",
-        "actionType": "base-time",
-        "actionGroupsNum": 6,
-        "actionTimes": 10,
-        "actionTime": 10,
-        "actionDistance": 10,
-        "actionDetails": "",
-        "actionImgURL": "",
-        "actionVideoURL": "",
-        "actionMoreURL": "",
-        "actionCompleted": false
-      },
-      {
-        "actionID": "4",
-        "actionName": "平板支撑",
-        "actionType": "base-onlytime",
-        "actionGroupsNum": 6,
-        "actionTimes": 10,
-        "actionTime": 10,
-        "actionDistance": 10.00,
-        "actionDetails": "",
-        "actionImgURL": "",
-        "actionVideoURL": "",
-        "actionMoreURL": "",
-        "actionCompleted": false
-      }
-    ];
-    var _list = <Widget>[];
-    for (int i = 0; i < list.length; i++) {
-      // print(list[i]);
-      if (list[i]['actionType'] == 'base-times') {
-        _list.add(new Container(
+    var dataListWidget = <Widget>[];
+    for (int i = 0; i < dataList.length; i++) {
+      if (dataList[i]['ActionType'] == 'times') {
+        dataListWidget.add(new Container(
             height: 50,
             child: Center(
               child: Row(children: <Widget>[
                 Expanded(
-                    child: Text(list[i]['actionName'].toString() +
+                    child: Text(dataList[i]['ActionName'].toString() +
                         ' ' +
-                        list[i]['actionGroupsNum'].toString() +
+                        dataList[i]['ActionGroupsNum'].toString() +
                         'x' +
-                        list[i]['actionTimes'].toString())),
+                        dataList[i]['ActionTimes'].toString())),
               ]),
             )));
-      } else if (list[i]['actionType'] == 'base-time') {
-        _list.add(Container(
+      } else if (dataList[i]['ActionType'] == 'time') {
+        dataListWidget.add(Container(
             height: 50,
             child: Center(
               child: Row(children: <Widget>[
                 Container(
                     width: 200,
-                    child: Text(list[i]['actionName'].toString() +
+                    child: Text(dataList[i]['ActionName'].toString() +
                         ' ' +
-                        list[i]['actionTimes'].toString() +
+                        dataList[i]['ActionTimes'].toString() +
                         '分钟 ' +
-                        list[i]['actionDistance'].toString() +
+                        dataList[i]['ActionDistance'].toString() +
                         '米')),
                 FlatButton(
                   // textColor: Colors.red,
@@ -132,33 +88,35 @@ class _DataDetailsState extends State<DataDetails> {
                 ),
               ]),
             )));
-      } else if (list[i]['actionType'] == 'base-onlytime') {
-        _list.add(new Container(
+      } else if (dataList[i]['ActionType'] == 'onlytime') {
+        dataListWidget.add(new Container(
             height: 50,
             child: Center(
               child: Row(children: <Widget>[
                 Expanded(
-                    child: Text(list[i]['actionName'].toString() +
+                    child: Text(dataList[i]['ActionName'].toString() +
                         ' ' +
-                        list[i]['actionTimes'].toString() +
+                        dataList[i]['ActionTimes'].toString() +
                         ' 分钟')),
               ]),
             )));
       }
     }
-    return Container(
-      margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0), //容器外填充
-      child: Column(
-        children: [
-          Text('$startTime 完成的计划详情'),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              children: _list,
-            ),
+    return Scaffold(
+        appBar: AppBar(title: Text("完成的计划详情")),
+        body: Container(
+          margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0), //容器外填充
+          child: Column(
+            children: [
+              // Text(' 完成的计划详情'),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.all(8),
+                  children: dataListWidget,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

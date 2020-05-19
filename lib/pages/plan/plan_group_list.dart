@@ -4,8 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:s/pages/plan/plan_details.dart';
+import 'package:s/pages/plan/plan_list.dart';
 import 'package:s/pages/plan/update_action.dart';
 import 'package:s/pages/plan/update_plan.dart';
+import 'package:s/pages/plan/update_plan_group.dart';
 import '../../model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,8 +27,8 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
     'base': '基础动作',
   };
   var dropdownValue = 'all';
-  var planList = <Widget>[];
-  getPlanList(actionType) async {
+  var planGroupList = <Widget>[];
+  getPlanGroupList() async {
     var response;
     var state;
     var newPlanList = <Widget>[];
@@ -35,7 +37,7 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
       var userInfoString = prefs.getString('userInfo');
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       response = await http.get(
-        "${SURL.getPlanList}?userID=${userInfo['UserID'] ?? ''}",
+        "${SURL.getPlanGroupList}?userID=${userInfo['UserID'] ?? ''}",
       );
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
@@ -46,13 +48,15 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
         if (body['status'] == 0) {
           var list = body['data'];
           // List<Map<String, dynamic>> list = data;
-
+          // print('list');
+          // print(list);
           for (int i = 0; i < list.length; i++) {
             newPlanList.add(new Container(
                 height: 50,
                 child: Center(
                   child: Row(children: <Widget>[
-                    Container(width: 210, child: Text(list[i]['PlanName'])),
+                    Container(
+                        width: 210, child: Text(list[i]['PlanGroupName'])),
                     FlatButton(
                       child: Text(
                         '查看',
@@ -65,9 +69,9 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
                         Navigator.push(
                           context,
                           new MaterialPageRoute(
-                              builder: (context) => UpdatePlanPage(
+                              builder: (context) => UpdatePlanGroupPage(
                                     type: 'edit',
-                                    planInfo: list[i],
+                                    planGroupInfo: list[i],
                                   )),
                         );
                       },
@@ -76,7 +80,7 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
                 )));
           }
           setState(() {
-            planList = newPlanList;
+            planGroupList = newPlanList;
           });
         }
       }
@@ -88,13 +92,13 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
   @override
   void initState() {
     super.initState();
-    getPlanList(dropdownValue);
+    getPlanGroupList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("计划列表")),
+      appBar: AppBar(title: Text("计划组列表")),
       body: Container(
           margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0), //容器外填充
           child: Column(
@@ -102,7 +106,7 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
               Expanded(
                 child: ListView(
                   // padding: const EdgeInsets.all(4),
-                  children: planList,
+                  children: planGroupList,
                 ),
               ),
               ButtonBar(
@@ -110,7 +114,7 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
                   FlatButton(
                     child: Text('动作列表'),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         new MaterialPageRoute(
                             builder: (context) => ActionListPage()),
@@ -118,21 +122,25 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
                     },
                   ),
                   FlatButton(
-                    child: Text('新建计划'),
+                    child: Text('计划列表'),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         new MaterialPageRoute(
-                            builder: (context) => UpdatePlanPage(
-                                  type: 'create',
-                                )),
+                            builder: (context) => PlanListPage()),
                       );
                     },
                   ),
                   FlatButton(
-                    child: Text('计划组列表'),
+                    child: Text('新建计划组'),
                     onPressed: () {
-                      // print('object');
+                      Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => UpdatePlanGroupPage(
+                                  type: 'create',
+                                )),
+                      );
                     },
                   ),
                 ],

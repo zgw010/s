@@ -1,5 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+import '../../model.dart';
+import 'data_details.dart';
 
 class Data extends StatefulWidget {
   Data({Key key}) : super(key: key);
@@ -9,36 +17,70 @@ class Data extends StatefulWidget {
 }
 
 class _DataState extends State<Data> {
-  var _list = <Widget>[];
+  List<dynamic> dataList = [];
+  String startTime = new DateFormat('yyyy-MM-dd').format(new DateTime.now());
+  String endTime = new DateFormat('yyyy-MM-dd').format(new DateTime.now());
 
-  var startTime = '2020-4-1', endTime = '2020-5-1';
+  getData() async {
+    try {
+      var response;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userInfoString = prefs.getString('userInfo');
+      Map<String, dynamic> userInfo = jsonDecode(userInfoString);
+      response = await http.get("${SURL.getDataList}?userID=${userInfo['UserID']}");
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body['status'] == 0) {
+          setState(() {
+            dataList = body['data'];
+          });
+        } else {}
+      } else {}
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    for (var i = 1; i < 30; i++) {
-      _list.add(Container(
+    var dataListWidget = <Widget>[];
+    for (var i = 0; i < dataList.length; i++) {
+      var data = dataList[i];
+      dataListWidget.add(Container(
           margin: EdgeInsets.only(top: 5.0), //容器外填充
           // border
           child: Row(children: [
             Container(
               width: 200,
-              child: Text('2020-4-$i 计划${i % 3 + 1}'),
+              child: Text('${data['DataTime']} ${data['DataName']}'),
             ),
             FlatButton(
               textColor: Colors.blueAccent[400],
-              child: Text(
-                '查看详细数据',
-                style: TextStyle(
-                  color: Colors.blueAccent[400],
-                  fontSize: 12.0,
-                  // fontWeight: FontWeight.w400,
-                  // decoration: TextDecoration.none,
-                ),
-              ),
+              child: Text('查看详细数据',
+                  style: TextStyle(
+                    color: Colors.blueAccent[400],
+                    fontSize: 12.0,
+                    // fontWeight: FontWeight.w400,
+                    // decoration: TextDecoration.none,
+                  )),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => DataDetailsPage()),
+                );
+              },
             )
           ])));
     }
     return Container(
-      margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0), //容器外填充
+      margin: EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0), //容器外填充
       child: Column(
         children: <Widget>[
           Center(
@@ -53,8 +95,13 @@ class _DataState extends State<Data> {
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2020),
-                        lastDate: DateTime(2021));
+                        lastDate: DateTime(2030));
                     print('$result');
+                    if (result != null) {
+                      setState(() {
+                        startTime = result.toString().split(' ')[0];
+                      });
+                    }
                   },
                 ),
                 Text(' '),
@@ -65,8 +112,13 @@ class _DataState extends State<Data> {
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2020),
-                        lastDate: DateTime(2021));
+                        lastDate: DateTime(2030));
                     print('$result');
+                    if (result != null) {
+                      setState(() {
+                        endTime = result.toString().split(' ')[0];
+                      });
+                    }
                   },
                 ),
               ],
@@ -76,7 +128,7 @@ class _DataState extends State<Data> {
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(8),
-              children: _list,
+              children: dataListWidget,
             ),
           ),
         ],

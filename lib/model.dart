@@ -24,9 +24,20 @@ class SURL {
   static String addUserAction = '$host/action/add_user_action';
   static String updateUserAction = '$host/action/update_user_action';
 
+  // plan
   static String getPlanList = '$host/plan/get_plan_list';
   static String addPlan = '$host/plan/add_plan';
   static String updatePlan = '$host/plan/update_plan';
+
+  // planGroup
+  static String getPlanGroupList = '$host/plan/get_plan_group_list';
+  static String addPlanGroup = '$host/plan/add_plan_group';
+  static String updatePlanGroup = '$host/plan/update_plan_group';
+
+  // data
+  static String getData = '$host/data/get_data';
+  static String getDataList = '$host/data/get_data_list';
+  static String addData = '$host/data/add_data';
 }
 
 class UserInfoModel with ChangeNotifier {
@@ -46,7 +57,7 @@ class UserInfoModel with ChangeNotifier {
 
   void updateUserInfo(newUserInfoString) {
     Map<String, dynamic> newUserInfo = jsonDecode(newUserInfoString);
-    print(newUserInfo);
+    // print(newUserInfo);
     _userInfo = newUserInfo;
     notifyListeners();
   }
@@ -58,7 +69,7 @@ class PlanModel with ChangeNotifier {
 
   void updateCurplan(newCurplan) {
     var newPlan = jsonDecode(newCurplan);
-    print(newPlan);
+    // print(newPlan);
     _curPlan = newPlan;
     notifyListeners();
   }

@@ -22,15 +22,10 @@ try {
         } else {
         }
       } else {
-        // Scaffold.of(ctx).showSnackBar(SnackBar(
-        //     content: Text('网络错误'),
-        //     action: SnackBarAction(
-        //       label: '知道了',
-        //       onPressed: () {
-        //         Scaffold.of(ctx).removeCurrentSnackBar();
-        //       },
-        //     )));
       }
     } catch (e) {
       print(e);
     }
+
+
+    pushReplacement

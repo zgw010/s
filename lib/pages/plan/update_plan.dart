@@ -70,6 +70,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
         'ActionGroupsNum': _actionGroupNumController.text ?? '',
         'ActionTime': _actionTimeController.text ?? '',
         'ActionDistance': _actionDistanceController.text ?? '',
+        'ActionCompleted': false,
       });
       // dropdownValue = '';
       _actionTimesController.text = '';

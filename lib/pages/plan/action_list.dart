@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:s/pages/plan/plan_group_list.dart';
 import 'package:s/pages/plan/plan_list.dart';
 import 'package:s/pages/plan/update_action.dart';
 import '../../model.dart';
@@ -49,7 +50,7 @@ class _ActionListPageState extends State<ActionListPage> {
 
           List<dynamic> list = data;
           for (int i = 0; i < list.length; i++) {
-            print(list[i]['ActionName']);
+            // print(list[i]['ActionName']);
             if (list[i]['ActionType'] == 'base-times' ||
                 list[i]['ActionType'] == 'base-time' ||
                 list[i]['ActionType'] == 'base-onlytime') {
@@ -170,7 +171,7 @@ class _ActionListPageState extends State<ActionListPage> {
                     // textColor: Colors.red,
                     child: Text('新建动作'),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         new MaterialPageRoute(
                             builder: (context) => UpdateActionPage(
@@ -181,9 +182,9 @@ class _ActionListPageState extends State<ActionListPage> {
                   ),
                   FlatButton(
                     // textColor: Colors.red,
-                    child: Text('查看计划列表'),
+                    child: Text('计划列表'),
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         new MaterialPageRoute(
                             builder: (context) => PlanListPage()),
@@ -191,9 +192,14 @@ class _ActionListPageState extends State<ActionListPage> {
                     },
                   ),
                   FlatButton(
-                    child: Text('查看计划组列表'),
+                    child: Text('计划组列表'),
                     onPressed: () {
-                      print('object');
+                      // print('object');
+                      Navigator.pushReplacement(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => PlanGroupListPage()),
+                      );
                     },
                   ),
                 ],

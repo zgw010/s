@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // child: Plan(selectMap: selectMap),
             ),
             Container(
-              child: RunData(),
+              child: Data(),
             ),
             Container(
               child: UserInfoPage(),
