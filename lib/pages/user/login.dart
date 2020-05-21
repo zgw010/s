@@ -24,10 +24,18 @@ class _LoginPageState extends State<LoginPage> {
 
   login(ctx, userName, password) async {
     var response;
+    // print('object');
+    // print(userName);
+    // print(password);
+    // print(SURL.login);
     try {
       response = await http.post(SURL.login,
           body: {'userName': userName, 'userPassword': password});
-    } catch (e) {}
+      // print(SURL.login);
+      // print(response);
+    } catch (e) {
+      print(e);
+    }
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);
       // print('body');
@@ -71,10 +79,10 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: 80.0),
           Column(
             children: <Widget>[
-              // Image.asset('assets/diamond.png'),
-              Icon(Icons.fitness_center),
+              Image.asset('assets/icon64.png'),
+              // Icon(Icons.fitness_center),
               SizedBox(height: 16.0),
-              Text('S'),
+              // Text('S'),
             ],
           ),
           SizedBox(height: 120.0),
@@ -105,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                   // final localUserID =
                   //     context.read<UserInfoModel>().userInfo['UserID'];
                   // if (localUserID != '' && localUserID != null) {
-                    Navigator.pop(context);
+                  Navigator.pop(context);
                   // }
                 },
               ),

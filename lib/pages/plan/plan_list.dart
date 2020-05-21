@@ -53,7 +53,10 @@ class _PlanListPageState extends State<PlanListPage> {
                 height: 50,
                 child: Center(
                   child: Row(children: <Widget>[
-                    Container(width: 210, child: Text(list[i]['PlanName'])),
+                    Expanded(
+                      child: Container(
+                          width: 210, child: Text(list[i]['PlanName'])),
+                    ),
                     FlatButton(
                       child: Text(
                         '查看',

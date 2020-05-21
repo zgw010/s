@@ -66,11 +66,12 @@ class _RunDataPageState extends State<RunDataPage> {
           margin: EdgeInsets.only(top: 5.0), //容器外填充
           // border
           child: Row(children: [
-            Container(
+            Expanded(
+                child: Container(
               width: 200,
               child: Text(
                   '${difference.inSeconds} min ${int.parse(data['Distance']) / 1000} km'),
-            ),
+            )),
             FlatButton(
               textColor: Colors.blueAccent[400],
               child: Text('查看详细数据',

@@ -62,10 +62,11 @@ class _DataPageState extends State<DataPage> {
           margin: EdgeInsets.only(top: 5.0), //容器外填充
           // border
           child: Row(children: [
-            Container(
+            Expanded(
+                child: Container(
               width: 200,
               child: Text('${data['DataTime']} ${data['DataName']}'),
-            ),
+            )),
             FlatButton(
               textColor: Colors.blueAccent[400],
               child: Text('查看详细数据',
@@ -91,7 +92,7 @@ class _DataPageState extends State<DataPage> {
         children: <Widget>[
           Center(
               child: Container(
-            width: 240,
+            width: 280,
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -121,7 +122,7 @@ class _DataPageState extends State<DataPage> {
                   ),
                 )),
                 SizedBox(
-                  width: 10,
+                  width: 30,
                 ),
                 Expanded(
                     child: TextField(
@@ -167,8 +168,7 @@ class _DataPageState extends State<DataPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  new MaterialPageRoute(
-                      builder: (context) => RunDataPage()),
+                  new MaterialPageRoute(builder: (context) => RunDataPage()),
                 );
               },
             ),

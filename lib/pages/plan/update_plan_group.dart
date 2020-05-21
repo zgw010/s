@@ -47,7 +47,9 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
           });
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 
   addPlan() {

@@ -40,7 +40,7 @@ class _ActionListPageState extends State<ActionListPage> {
       if (response.statusCode == 200) {
         // print(response.body.runtimeType.toString());
         final body = jsonDecode(response.body);
-        // print(body);
+        print(body);
         // print("${SURL.getActionList}?userID=${userInfo['UserID'] ?? ''}&actionType=$dropdownValue");
         setState(() {
           state = body['status'];
@@ -58,7 +58,9 @@ class _ActionListPageState extends State<ActionListPage> {
                   height: 50,
                   child: Center(
                     child: Row(children: <Widget>[
-                      Container(width: 210, child: Text(list[i]['ActionName'])),
+                      Expanded(
+                          child: Container(
+                              width: 210, child: Text(list[i]['ActionName']))),
                       FlatButton(
                         // textColor: Colors.red,
                         child: Text(
@@ -72,7 +74,8 @@ class _ActionListPageState extends State<ActionListPage> {
                           Navigator.push(
                             context,
                             new MaterialPageRoute(
-                                builder: (context) => ActionDetailsPage()),
+                                builder: (context) =>
+                                    ActionDetailsPage(actionData: list[i])),
                           );
                         },
                       ),
@@ -82,7 +85,9 @@ class _ActionListPageState extends State<ActionListPage> {
               newActionList.add(Container(
                 height: 50,
                 child: Row(children: <Widget>[
-                  Container(width: 210, child: Text(list[i]['ActionName'])),
+                  Expanded(
+                      child: Container(
+                          width: 210, child: Text(list[i]['ActionName']))),
                   FlatButton(
                     // textColor: Colors.red,
                     child: Text(

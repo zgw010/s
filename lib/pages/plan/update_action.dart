@@ -95,153 +95,157 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text('${widget.type == 'create' ? '新建动作' : '修改动作'}'),
+        ),
         body: Builder(
-      builder: (ctx) => Container(
-          margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0), //容器外填充
-          child: Column(
-            children: <Widget>[
-              // Text('当前正在进行 $planGroupName 计划组 $planName 计划'),
-              Container(
-                margin: EdgeInsets.only(top: 20.0, bottom: 20.0), //容器外填充
-                child: Text(
-                  '新建动作',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20.0,
-                    height: 1.0,
-                    decoration: TextDecoration.none,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          width: 80,
-                          child: Text(
-                            '动作名称：',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                            child: TextField(
-                          controller: _actionNameController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            filled: true,
-                          ),
-                        )),
-                      ],
-                    ),
-                    Container(
-                      height: 5.0,
-                      child: Text(''),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          width: 80,
-                          child: Text(
-                            '动作类型',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                        DropdownButton<String>(
-                          value: _actionType,
-                          icon: Icon(Icons.arrow_downward),
-                          iconSize: 16,
-                          elevation: 16,
-                          style: TextStyle(
-                            color: Colors.black,
-                            decoration: TextDecoration.none,
-                          ),
-                          // underline: Container(
-                          //   height: 1,
-                          //   color: Colors.black,
-                          // ),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              _actionType = newValue;
-                            });
-                          },
-                          items: <String>[
-                            'user-times',
-                            'user-time',
-                            'user-onlytime'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(actionTypeMap[value]),
-                            );
-                          }).toList(),
-                        ),
-                        // ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Container(
-                          width: 80,
-                          child: Text(
-                            '动作描述：',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                            child: TextField(
-                          controller: _actionDetailsController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            filled: true,
-                          ),
-                        )),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              ButtonBar(
+          builder: (ctx) => Container(
+              margin:
+                  EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0), //容器外填充
+              child: Column(
                 children: <Widget>[
-                  // FlatButton(
-                  //   // textColor: Colors.red,
-                  //   child: Text('新建动作'),
-                  //   onPressed: () {},
+                  // Text('当前正在进行 $planGroupName 计划组 $planName 计划'),
+                  // Container(
+                  //   margin: EdgeInsets.only(top: 20.0, bottom: 20.0), //容器外填充
+                  //   child: Text(
+                  //     '新建动作',
+                  //     style: TextStyle(
+                  //       color: Colors.black,
+                  //       fontSize: 20.0,
+                  //       height: 1.0,
+                  //       decoration: TextDecoration.none,
+                  //     ),
+                  //   ),
                   // ),
-                  FlatButton(
-                    textColor: Colors.red,
-                    child: Text('取消'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                  Expanded(
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              width: 80,
+                              child: Text(
+                                '动作名称：',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w400,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                                child: TextField(
+                              controller: _actionNameController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                filled: true,
+                              ),
+                            )),
+                          ],
+                        ),
+                        Container(
+                          height: 5.0,
+                          child: Text(''),
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              width: 80,
+                              child: Text(
+                                '动作类型',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w400,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                            DropdownButton<String>(
+                              value: _actionType,
+                              icon: Icon(Icons.arrow_downward),
+                              iconSize: 16,
+                              elevation: 16,
+                              style: TextStyle(
+                                color: Colors.black,
+                                decoration: TextDecoration.none,
+                              ),
+                              // underline: Container(
+                              //   height: 1,
+                              //   color: Colors.black,
+                              // ),
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  _actionType = newValue;
+                                });
+                              },
+                              items: <String>[
+                                'user-times',
+                                'user-time',
+                                'user-onlytime'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(actionTypeMap[value]),
+                                );
+                              }).toList(),
+                            ),
+                            // ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              width: 80,
+                              child: Text(
+                                '动作描述：',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w400,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                                child: TextField(
+                              controller: _actionDetailsController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                filled: true,
+                              ),
+                            )),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  FlatButton(
-                    child: Text('新建'),
-                    onPressed: () {
-                      addAction(ctx);
-                    },
+
+                  ButtonBar(
+                    children: <Widget>[
+                      // FlatButton(
+                      //   // textColor: Colors.red,
+                      //   child: Text('新建动作'),
+                      //   onPressed: () {},
+                      // ),
+                      FlatButton(
+                        textColor: Colors.red,
+                        child: Text('取消'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text('新建'),
+                        onPressed: () {
+                          addAction(ctx);
+                        },
+                      ),
+                    ],
                   ),
                 ],
-              ),
-            ],
-          )),
-    ));
+              )),
+        ));
   }
 }
