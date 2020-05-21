@@ -3,31 +3,36 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRagePicker;
 import 'package:intl/intl.dart';
+import 'package:s/pages/data/run_data_details.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import '../../model.dart';
 import 'data_details.dart';
+import 'run_data.dart';
 
-class Data extends StatefulWidget {
-  Data({Key key}) : super(key: key);
+class DataPage extends StatefulWidget {
+  DataPage({Key key}) : super(key: key);
 
   @override
-  _DataState createState() => _DataState();
+  _DataPageState createState() => _DataPageState();
 }
 
-class _DataState extends State<Data> {
+class _DataPageState extends State<DataPage> {
   List<dynamic> dataList = [];
-  String startTime = new DateFormat('yyyy-MM-dd').format(new DateTime.now());
-  String endTime = new DateFormat('yyyy-MM-dd').format(new DateTime.now());
+  TextEditingController _startTimeController = TextEditingController(
+      text: new DateFormat('yyyy-MM-dd').format(new DateTime.now()));
+  TextEditingController _endTimeController = TextEditingController(
+      text: new DateFormat('yyyy-MM-dd').format(new DateTime.now()));
 
-  getData() async {
+  getData(startTime, endTime) async {
     try {
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
-      response = await http.get("${SURL.getDataList}?userID=${userInfo['UserID']}");
+      response = await http.get(
+          "${SURL.getDataList}?userID=${userInfo['UserID']}&startTime=$startTime&endTime=$endTime");
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         if (body['status'] == 0) {
@@ -44,7 +49,8 @@ class _DataState extends State<Data> {
   @override
   void initState() {
     super.initState();
-    getData();
+
+    getData(_startTimeController.text, _endTimeController.text);
   }
 
   @override
@@ -88,49 +94,85 @@ class _DataState extends State<Data> {
             width: 240,
             child: Row(
               children: <Widget>[
-                RaisedButton(
-                  child: Text('选择开始时间'),
-                  onPressed: () async {
+                Expanded(
+                    child: TextField(
+                  readOnly: true,
+                  controller: _startTimeController,
+                  onTap: () async {
                     var result = await showDatePicker(
                         context: context,
-                        initialDate: DateTime.now(),
+                        initialDate: DateTime.parse(_startTimeController.text),
                         firstDate: DateTime(2020),
                         lastDate: DateTime(2030));
                     print('$result');
                     if (result != null) {
                       setState(() {
-                        startTime = result.toString().split(' ')[0];
+                        _startTimeController.text =
+                            result.toString().split(' ')[0];
                       });
+                      getData(result.toString().split(' ')[0],
+                          _endTimeController.text);
                     }
                   },
+                  decoration: InputDecoration(
+                    labelText: '开始时间',
+                    border: InputBorder.none,
+                    filled: true,
+                  ),
+                )),
+                SizedBox(
+                  width: 10,
                 ),
-                Text(' '),
-                RaisedButton(
-                  child: Text('选择结束时间'),
-                  onPressed: () async {
+                Expanded(
+                    child: TextField(
+                  readOnly: true,
+                  controller: _endTimeController,
+                  decoration: InputDecoration(
+                    labelText: '结束时间',
+                    border: InputBorder.none,
+                    filled: true,
+                  ),
+                  onTap: () async {
                     var result = await showDatePicker(
                         context: context,
-                        initialDate: DateTime.now(),
+                        initialDate: DateTime.parse(_endTimeController.text),
                         firstDate: DateTime(2020),
                         lastDate: DateTime(2030));
                     print('$result');
                     if (result != null) {
+                      getData(_startTimeController.text,
+                          result.toString().split(' ')[0]);
                       setState(() {
-                        endTime = result.toString().split(' ')[0];
+                        _endTimeController.text =
+                            result.toString().split(' ')[0];
                       });
                     }
                   },
-                ),
+                )),
               ],
             ),
           )),
-          Text('当前显示 $startTime 至 $endTime 期间的数据'),
+          // Text('当前显示 $startTime 至 $endTime 期间的数据'),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(8),
               children: dataListWidget,
             ),
           ),
+          Align(
+            alignment: Alignment.topRight,
+            child: FlatButton(
+              textColor: Colors.blue,
+              child: Text('跑步数据'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => RunDataPage()),
+                );
+              },
+            ),
+          )
         ],
       ),
     );

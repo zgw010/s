@@ -15,7 +15,7 @@ class UserIDModel with ChangeNotifier {
 }
 
 class SURL {
-  static String host = 'http://47.100.43.162:8080';
+  static String host = 'https://www.iyyq.top/api/s';
   static String login = '$host/login';
   static String register = '$host/register';
   static String edit = '$host/edit';
@@ -38,6 +38,10 @@ class SURL {
   static String getData = '$host/data/get_data';
   static String getDataList = '$host/data/get_data_list';
   static String addData = '$host/data/add_data';
+
+  static String getRunData = '$host/data/get_run_data';
+  static String getRunDataList = '$host/data/get_run_data_list';
+  static String addRunData = '$host/data/add_run_data';
 }
 
 class UserInfoModel with ChangeNotifier {
