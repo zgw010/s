@@ -59,11 +59,11 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
           // print('action');
           // print(body['data'].runtimeType.toString());
           if (type == 'create') {
-            context.read<ActionModel>().insertActionList(0, body['data']);
+            context.read<ActionModel>().insertAction(0, body['data']);
           } else if (type == 'edit') {
             context
                 .read<ActionModel>()
-                .replaceActionList(index, index + 1, [body['data']]);
+                .replaceAction(index, index + 1, [body['data']]);
           }
           Navigator.pop(
             context,
@@ -109,7 +109,7 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
         if (body['status'] == 0) {
           context
               .read<ActionModel>()
-              .deleteActionList(widget.index, widget.index + 1);
+              .deleteAction(widget.index, widget.index + 1);
           Navigator.pop(
             context,
           );

@@ -69,51 +69,43 @@ class ActionModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void insertActionList(index, item) {
+  void insertAction(index, item) {
     _actionList.insert(index, item);
     notifyListeners();
   }
 
-  void replaceActionList(start, end, item) {
+  void replaceAction(start, end, item) {
     _actionList.replaceRange(start, end, item);
     notifyListeners();
   }
 
-  void deleteActionList(start, end) {
+  void deleteAction(start, end) {
     _actionList.removeRange(start, end);
     notifyListeners();
   }
 }
 
 class PlanModel with ChangeNotifier {
-  Map<String, dynamic> _curPlan = {};
-  Map<String, dynamic> _curPlanGroup = {};
-  List<Map<String, dynamic>> _planList = [];
-  Map<String, dynamic> get curPlan => _curPlan;
-  Map<String, dynamic> get curPlanGroup => _curPlanGroup;
-  List<Map<String, dynamic>> get planList => _planList;
-
-  void updateCurplan(plan) {
-    var newPlan = jsonDecode(plan);
-    _curPlan = newPlan;
-    notifyListeners();
-  }
-
-  void updateCurplanGroup(planGroup) {
-    var newPlanGroup = jsonDecode(planGroup);
-    _curPlanGroup = newPlanGroup;
-    notifyListeners();
-  }
+  List<dynamic> _planList = [];
+  List<dynamic> get planList => _planList;
 
   void updatePlanList(list) {
-    var newPlanList = jsonDecode(list);
-    _planList = newPlanList;
+    _planList = list;
     notifyListeners();
   }
 
-  void addPlanList(item) {
-    // var newPlanList = jsonDecode(item);
-    _planList.add(item);
+  void insertPlan(index, item) {
+    _planList.insert(index, item);
+    notifyListeners();
+  }
+
+  void replacePlan(start, end, item) {
+    _planList.replaceRange(start, end, item);
+    notifyListeners();
+  }
+
+  void deletePlan(start, end) {
+    _planList.removeRange(start, end);
     notifyListeners();
   }
 }
