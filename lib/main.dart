@@ -59,13 +59,19 @@ class _MyHomePageState extends State<MyHomePage> {
     String userInfo = prefs.getString('userInfo');
     // prefs.setString('userInfo','');
     // print(userInfo);
-    if (userInfo == '' || userInfo == null) {
+
+    if (userInfo == '' || userInfo == null || userInfo == '{}') {
+      setState(() {
+        _currentIndex = 2;
+      });
+      _pageController.jumpToPage(2);
       Navigator.push(
         context,
         new MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } else {
-      context.read<UserInfoModel>().updateUserInfo(userInfo);
+      context.read<UserInfoModel>().updateUserInfo(jsonDecode(userInfo));
+      // print(userInfo);
     }
   }
 

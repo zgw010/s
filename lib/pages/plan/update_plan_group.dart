@@ -22,7 +22,7 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
   String dropdownValue = '';
   final _planGroupNameController = TextEditingController();
   var planGroupDetailsList = [];
-  List<Map<String, dynamic>> planList;
+  List<Map<String, dynamic>> planList = [];
 
   getPlanList() async {
     try {
@@ -65,7 +65,7 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
     });
   }
 
-  updatePlan() async {
+  updatePlanGroup() async {
     try {
       String type = widget.type;
       int index = widget.index;
@@ -75,17 +75,24 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
       var userInfoString = prefs.getString('userInfo');
       if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
+
       if (type == 'create') {
         response = await http.post("${SURL.addPlanGroup}", body: {
-          'userID': userInfo['UserID'],
-          'planName': _planGroupNameController.text,
-          'planDetails': jsonEncode(planGroupDetailsList),
+          'planGroupUserID': userInfo['UserID'],
+          'planGroupName': _planGroupNameController.text,
+          'planGroupDetails': jsonEncode(planGroupDetailsList),
         });
       } else if (type == 'edit') {
+        print('type');
+        print({
+          'planGroupID': planGroupInfo['PlanGroupID'],
+          'planGroupName': _planGroupNameController.text,
+          'planGroupDetails': jsonEncode(planGroupDetailsList),
+        });
         response = await http.post("${SURL.updatePlanGroup}", body: {
-          'planID': planGroupInfo['PlanID'],
-          'planName': _planGroupNameController.text,
-          'planDetails': jsonEncode(planGroupDetailsList),
+          'planGroupID': planGroupInfo['PlanGroupID'],
+          'planGroupName': _planGroupNameController.text,
+          'planGroupDetails': jsonEncode(planGroupDetailsList),
         });
       }
 
@@ -93,11 +100,11 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
         final body = jsonDecode(response.body);
         if (body['status'] == 0) {
           if (type == 'create') {
-            context.read<PlanModel>().insertPlan(0, body['data']);
+            context.read<PlanModel>().insertPlanGroup(0, body['data']);
           } else if (type == 'edit') {
             context
                 .read<PlanModel>()
-                .replacePlan(index, index + 1, [body['data']]);
+                .replacePlanGroup(index, index + 1, [body['data']]);
           }
           Navigator.pop(
             context,
@@ -109,17 +116,17 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
     }
   }
 
-  deletePlan() async {
+  deletePlanGroup() async {
     try {
       int index = widget.index;
-      var planInfo = widget.planGroupInfo;
-      var response = await http.post("${SURL.deletePlan}", body: {
-        'planID': planInfo['PlanID'],
+      var planGroupInfo = widget.planGroupInfo;
+      var response = await http.post("${SURL.deletePlanGroup}", body: {
+        'planGroupID': planGroupInfo['PlanGroupID'],
       });
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         if (body['status'] == 0) {
-          context.read<PlanModel>().deletePlan(index, index + 1);
+          context.read<PlanModel>().deletePlanGroup(index, index + 1);
           Navigator.pop(
             context,
           );
@@ -162,7 +169,7 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
                     '删除',
                     style: TextStyle(
                       color: Colors.red,
-                      fontSize: 12.0,
+                      fontSize: 16.0,
                     ),
                   ),
                   onPressed: () {
@@ -263,7 +270,7 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
                             '计划组名称：',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 14.0,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.w400,
                               decoration: TextDecoration.none,
                             ),
@@ -288,7 +295,7 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
                             '计划组内容：',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 14.0,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.w400,
                               decoration: TextDecoration.none,
                             ),
@@ -317,17 +324,23 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
                   FlatButton(
                     textColor: Colors.red,
                     child: Text('取消'),
-                    onPressed: () {},
-                  ),
-                  FlatButton(
-                    textColor: Colors.red,
-                    child: Text('删除'),
-                    onPressed: () {},
-                  ),
-                  FlatButton(
-                    child: Text('确定'),
                     onPressed: () {
-                      updatePlan();
+                      Navigator.pop(context);
+                    },
+                  ),
+                  widget.type == 'edit'
+                      ? FlatButton(
+                          textColor: Colors.red,
+                          child: Text('删除'),
+                          onPressed: () {
+                            deletePlanGroup();
+                          },
+                        )
+                      : SizedBox(),
+                  FlatButton(
+                    child: Text('${widget.type == 'create' ? '新建' : '修改'}'),
+                    onPressed: () {
+                      updatePlanGroup();
                     },
                   ),
                 ],

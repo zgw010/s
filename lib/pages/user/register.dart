@@ -131,7 +131,7 @@ class _RegisterState extends State<Register> {
                                 '用户名：',
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14.0,
+                                  fontSize: 16.0,
                                   height: 1.0,
                                   fontWeight: FontWeight.w400,
                                   // decoration: TextDecoration.none,
@@ -159,7 +159,7 @@ class _RegisterState extends State<Register> {
                                 '密码',
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14.0,
+                                  fontSize: 16.0,
                                   height: 1.0,
                                   fontWeight: FontWeight.w400,
                                   decoration: TextDecoration.none,
@@ -188,7 +188,7 @@ class _RegisterState extends State<Register> {
                                 '生日：',
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14.0,
+                                  fontSize: 16.0,
                                   fontWeight: FontWeight.w400,
                                   decoration: TextDecoration.none,
                                 ),
@@ -215,7 +215,7 @@ class _RegisterState extends State<Register> {
                                 '身高：(cm)',
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14.0,
+                                  fontSize: 16.0,
                                   fontWeight: FontWeight.w400,
                                   decoration: TextDecoration.none,
                                 ),
@@ -242,7 +242,7 @@ class _RegisterState extends State<Register> {
                               '体重：(kg)',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 14.0,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.w400,
                                 decoration: TextDecoration.none,
                               ),
@@ -270,7 +270,7 @@ class _RegisterState extends State<Register> {
                               '性别：',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 14.0,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.w400,
                                 decoration: TextDecoration.none,
                               ),
@@ -314,7 +314,7 @@ class _RegisterState extends State<Register> {
                               '个人简介：',
                               style: TextStyle(
                                 color: Colors.black,
-                                fontSize: 14.0,
+                                fontSize: 16.0,
                                 fontWeight: FontWeight.w400,
                                 decoration: TextDecoration.none,
                               ),

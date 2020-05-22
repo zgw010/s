@@ -86,7 +86,7 @@ class _ActionListPageState extends State<ActionListPage> {
                     '查看',
                     style: TextStyle(
                       color: Colors.blueAccent[400],
-                      fontSize: 12.0,
+                      fontSize: 16.0,
                     ),
                   ),
                   onPressed: () {
@@ -113,7 +113,7 @@ class _ActionListPageState extends State<ActionListPage> {
                 '修改',
                 style: TextStyle(
                   color: Colors.blueAccent[400],
-                  fontSize: 12.0,
+                  fontSize: 16.0,
                 ),
               ),
               onPressed: () {

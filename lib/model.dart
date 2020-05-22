@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 
 class SURL {
   static String host = 'https://www.iyyq.top/api/s';
+
+  // user
   static String login = '$host/login';
   static String register = '$host/register';
   static String edit = '$host/edit';
   static String getCurPlan = '$host/plan/get_cur_plan';
+  static String updatePlanGroupID = '$host/user/update_plan_group_id';
 
   // action
   static String getActionList = '$host/action/get_action_list';
@@ -52,13 +55,9 @@ class UserInfoModel with ChangeNotifier {
   };
   Map<String, dynamic> get userInfo => _userInfo;
 
-  void updateUserInfo(newUserInfoString) {
-    // if (newUserInfoString != '' && newUserInfoString != '{}') {
-    Map<String, dynamic> newUserInfo = jsonDecode(newUserInfoString);
-    // print(newUserInfo);
+  void updateUserInfo(newUserInfo) {
     _userInfo = newUserInfo;
     notifyListeners();
-    // }
   }
 }
 
@@ -88,11 +87,41 @@ class ActionModel with ChangeNotifier {
 }
 
 class PlanModel with ChangeNotifier {
+  int _planState = 1;
+  Map _curPlan = {};
+  Map _curPlanGroup = {};
+  int get planState => _planState;
+  Map get curPlan => _curPlan;
+  Map get curPlanGroup => _curPlanGroup;
+
+  List<dynamic> _curPlanDetails = [];
+  List<dynamic> get curPlanDetails => _curPlanDetails;
+
   List<dynamic> _planList = [];
   List<dynamic> get planList => _planList;
 
   List<dynamic> _planGroupList = [];
   List<dynamic> get planGroupList => _planGroupList;
+
+  void updatePlanState(state) {
+    _planState = state;
+    notifyListeners();
+  }
+
+  void updateCurPlan(data) {
+    _curPlan = data;
+    notifyListeners();
+  }
+
+  void updateCurPlanGroup(data) {
+    _curPlanGroup = data;
+    notifyListeners();
+  }
+
+  void updateCurPlanDetails(list) {
+    _curPlanDetails = list;
+    notifyListeners();
+  }
 
   void updatePlanList(list) {
     _planList = list;

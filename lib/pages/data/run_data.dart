@@ -78,7 +78,7 @@ class _RunDataPageState extends State<RunDataPage> {
               child: Text('查看详细数据',
                   style: TextStyle(
                     color: Colors.blueAccent[400],
-                    fontSize: 12.0,
+                    fontSize: 16.0,
                     // fontWeight: FontWeight.w400,
                     // decoration: TextDecoration.none,
                   )),

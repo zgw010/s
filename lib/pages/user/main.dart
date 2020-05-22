@@ -17,7 +17,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
   deleteUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userInfo', '{}');
-    context.read<UserInfoModel>().updateUserInfo('{}');
+    // context.read<UserInfoModel>().updateUserInfo({});
     Navigator.push(
       context,
       new MaterialPageRoute(builder: (context) => LoginPage()),

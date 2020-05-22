@@ -74,21 +74,6 @@ class _DataDetailsPageState extends State<DataDetailsPage> {
                         '分钟 ' +
                         dataList[i]['ActionDistance'].toString() +
                         '米')),
-                // dataList[i]['ActionID'] == '4'
-                //     ? FlatButton(
-                //         // textColor: Colors.red,
-                //         child: Text(
-                //           '查看详情',
-                //           style: TextStyle(
-                //             color: Colors.blueAccent[400],
-                //             fontSize: 12.0,
-                //             // fontWeight: FontWeight.w400,
-                //             // decoration: TextDecoration.none,
-                //           ),
-                //         ),
-                //         // onPressed: () {},
-                //       )
-                //     : SizedBox()
               ]),
             )));
       } else if (dataList[i]['ActionType'] == 'onlytime') {

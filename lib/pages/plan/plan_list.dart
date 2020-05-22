@@ -68,7 +68,7 @@ class _PlanListPageState extends State<PlanListPage> {
                   '查看',
                   style: TextStyle(
                     color: Colors.blueAccent[400],
-                    fontSize: 12.0,
+                    fontSize: 16.0,
                   ),
                 ),
                 onPressed: () {

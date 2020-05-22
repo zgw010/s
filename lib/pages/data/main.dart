@@ -70,10 +70,10 @@ class _DataPageState extends State<DataPage> {
             )),
             FlatButton(
               textColor: Colors.blueAccent[400],
-              child: Text('查看详细数据',
+              child: Text('详细数据',
                   style: TextStyle(
                     color: Colors.blueAccent[400],
-                    fontSize: 12.0,
+                    fontSize: 16.0,
                     // fontWeight: FontWeight.w400,
                     // decoration: TextDecoration.none,
                   )),

@@ -121,8 +121,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
             context,
           );
         } else {}
-      } else {
-      }
+      } else {}
     } catch (e) {
       print(e);
     }
@@ -186,7 +185,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                       '删除',
                       style: TextStyle(
                         color: Colors.red,
-                        fontSize: 12.0,
+                        fontSize: 16.0,
                       ),
                     ),
                     onPressed: () {
@@ -215,7 +214,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                     '删除',
                     style: TextStyle(
                       color: Colors.red,
-                      fontSize: 12.0,
+                      fontSize: 16.0,
                     ),
                   ),
                   onPressed: () {
@@ -245,7 +244,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                     '删除',
                     style: TextStyle(
                       color: Colors.red,
-                      fontSize: 12.0,
+                      fontSize: 16.0,
                     ),
                   ),
                   onPressed: () {
@@ -346,7 +345,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                                         '组数（组）：',
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 14.0,
+                                          fontSize: 16.0,
                                           fontWeight: FontWeight.w400,
                                           decoration: TextDecoration.none,
                                         ),
@@ -376,7 +375,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                                         '次数（次）：',
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 14.0,
+                                          fontSize: 16.0,
                                           fontWeight: FontWeight.w400,
                                           decoration: TextDecoration.none,
                                         ),
@@ -409,7 +408,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                                     '时间（分钟）：',
                                     style: TextStyle(
                                       color: Colors.black,
-                                      fontSize: 14.0,
+                                      fontSize: 16.0,
                                       fontWeight: FontWeight.w400,
                                       decoration: TextDecoration.none,
                                     ),
@@ -442,7 +441,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                                         '时间（分钟）：',
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 14.0,
+                                          fontSize: 16.0,
                                           fontWeight: FontWeight.w400,
                                           decoration: TextDecoration.none,
                                         ),
@@ -472,7 +471,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                                         '距离（米）：',
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontSize: 14.0,
+                                          fontSize: 16.0,
                                           fontWeight: FontWeight.w400,
                                           decoration: TextDecoration.none,
                                         ),
@@ -518,7 +517,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                             '计划名称：',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 14.0,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.w400,
                               decoration: TextDecoration.none,
                             ),
@@ -543,7 +542,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                             '计划内容：',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 14.0,
+                              fontSize: 16.0,
                               fontWeight: FontWeight.w400,
                               decoration: TextDecoration.none,
                             ),
@@ -576,15 +575,17 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                       Navigator.pop(context);
                     },
                   ),
+                  widget.type == 'edit'
+                      ? FlatButton(
+                          textColor: Colors.red,
+                          child: Text('删除'),
+                          onPressed: () {
+                            deletePlan();
+                          },
+                        )
+                      : SizedBox(),
                   FlatButton(
-                    textColor: Colors.red,
-                    child: Text('删除'),
-                    onPressed: () {
-                      deletePlan();
-                    },
-                  ),
-                  FlatButton(
-                    child: Text('确定'),
+                    child: Text('${widget.type == 'create' ? '新建' : '修改'}'),
                     onPressed: () {
                       updatePlan();
                     },

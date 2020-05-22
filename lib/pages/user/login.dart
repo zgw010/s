@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:s/pages/plan/main.dart';
 import 'register.dart';
 import 'package:provider/provider.dart';
 import '../../model.dart';
@@ -17,37 +19,40 @@ class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   saveUserInfo(userInfo) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('userInfo', userInfo);
-    context.read<UserInfoModel>().updateUserInfo(userInfo);
-  }
-
-  login(ctx, userName, password) async {
-    var response;
-    // print('object');
-    // print(userName);
-    // print(password);
-    // print(SURL.login);
     try {
-      response = await http.post(SURL.login,
-          body: {'userName': userName, 'userPassword': password});
-      // print(SURL.login);
-      // print(response);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userInfo', jsonEncode(userInfo));
+      context.read<UserInfoModel>().updateUserInfo(userInfo);
     } catch (e) {
       print(e);
     }
-    if (response.statusCode == 200) {
-      final body = jsonDecode(response.body);
-      // print('body');
-      // print(body);
-      if (body['status'] == 0) {
-        saveUserInfo(body['userInfo']);
-        Navigator.pop(
-          context,
-        );
-      } else if (body['status'] == 1) {
+  }
+
+  login(ctx, userName, password) async {
+    try {
+      var response = await http.post(SURL.login,
+          body: {'userName': userName, 'userPassword': password});
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body['status'] == 0) {
+          Navigator.pop(
+            context,
+          );
+          saveUserInfo(body['userInfo']);
+        } else if (body['status'] == 1) {
+          Scaffold.of(ctx).showSnackBar(SnackBar(
+            content: Text('登录失败'),
+            action: SnackBarAction(
+              label: '知道了',
+              onPressed: () {
+                Scaffold.of(ctx).removeCurrentSnackBar();
+              },
+            ),
+          ));
+        }
+      } else {
         Scaffold.of(ctx).showSnackBar(SnackBar(
-          content: Text('登录失败'),
+          content: Text('网络异常'),
           action: SnackBarAction(
             label: '知道了',
             onPressed: () {
@@ -56,16 +61,8 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ));
       }
-    } else {
-      Scaffold.of(ctx).showSnackBar(SnackBar(
-        content: Text('网络异常'),
-        action: SnackBarAction(
-          label: '知道了',
-          onPressed: () {
-            Scaffold.of(ctx).removeCurrentSnackBar();
-          },
-        ),
-      ));
+    } catch (e) {
+      print(e);
     }
   }
 

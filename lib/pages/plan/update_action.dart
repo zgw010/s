@@ -182,7 +182,7 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
                                 '动作名称：',
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14.0,
+                                  fontSize: 16.0,
                                   fontWeight: FontWeight.w400,
                                   decoration: TextDecoration.none,
                                 ),
@@ -210,7 +210,7 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
                                 '动作类型',
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14.0,
+                                  fontSize: 16.0,
                                   fontWeight: FontWeight.w400,
                                   decoration: TextDecoration.none,
                                 ),
@@ -256,7 +256,7 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
                                 '动作描述：',
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14.0,
+                                  fontSize: 16.0,
                                   fontWeight: FontWeight.w400,
                                   decoration: TextDecoration.none,
                                 ),
@@ -283,13 +283,15 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
                       //   child: Text('新建动作'),
                       //   onPressed: () {},
                       // ),
-                      FlatButton(
-                        textColor: Colors.red,
-                        child: Text('删除'),
-                        onPressed: () {
-                          deleteAction(ctx);
-                        },
-                      ),
+                      widget.type == 'edit'
+                          ? FlatButton(
+                              textColor: Colors.red,
+                              child: Text('删除'),
+                              onPressed: () {
+                                deleteAction(ctx);
+                              },
+                            )
+                          : SizedBox(),
                       FlatButton(
                         textColor: Colors.red,
                         child: Text('取消'),
