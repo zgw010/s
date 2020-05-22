@@ -19,7 +19,6 @@ class Plan extends StatefulWidget {
 }
 
 class _PlanState extends State<Plan> {
-  var plan = {};
   var curPlanList = [];
   bool planCompleted = false;
   int state = 0;
@@ -30,6 +29,7 @@ class _PlanState extends State<Plan> {
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       response = await http.get(
         "${SURL.getCurPlan}?userID=${userInfo['UserID'] ?? ''}",
@@ -63,11 +63,12 @@ class _PlanState extends State<Plan> {
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
-      print({
-        'planGroupID': userInfo['UserPlanGroupID'],
-        'updateType': 'complete',
-      });
+      // print({
+      //   'planGroupID': userInfo['UserPlanGroupID'],
+      //   'updateType': 'complete',
+      // });
       response = await http.post("${SURL.updatePlanGroup}", body: {
         'planGroupID': userInfo['UserPlanGroupID'],
         'updateType': 'complete',
@@ -91,6 +92,7 @@ class _PlanState extends State<Plan> {
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       // curPlanList
       response = await http.post("${SURL.addData}", body: {

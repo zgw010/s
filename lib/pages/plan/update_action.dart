@@ -9,9 +9,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdateActionPage extends StatefulWidget {
-  UpdateActionPage({Key key, this.type = 'create', this.actionInfo})
+  UpdateActionPage({Key key, this.index, this.type = 'create', this.actionInfo})
       : super(key: key);
-  final type;
+  int index;
+  String type;
   final actionInfo;
   @override
   _UpdateActionPageState createState() => _UpdateActionPageState();
@@ -23,25 +24,28 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
     'user-time': '按时间和距离计数',
     'user-onlytime': '仅按时间计数',
   };
-  var _actionType = 'user-times';
+  String _actionType = 'user-times';
   final _actionNameController = TextEditingController();
   final _actionDetailsController = TextEditingController();
-  addAction(ctx) async {
+  updateAction(ctx) async {
     try {
+      String type = widget.type;
+      int index = widget.index;
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
-      if (this.widget.type == 'create') {
+      if (type == 'create') {
         response = await http.post("${SURL.addUserAction}", body: {
           'userID': userInfo['UserID'],
           'actionName': _actionNameController.text,
           'actionDetails': _actionDetailsController.text,
           'actionType': _actionType,
         });
-      } else if (this.widget.type == 'edit') {
+      } else if (type == 'edit') {
         response = await http.post("${SURL.updateUserAction}", body: {
-          'userID': userInfo['UserID'],
+          // 'userID': userInfo['UserID'],
           'actionID': this.widget.actionInfo['ActionID'],
           'actionName': _actionNameController.text,
           'actionDetails': _actionDetailsController.text,
@@ -52,6 +56,60 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         if (body['status'] == 0) {
+          // print('action');
+          // print(body['data'].runtimeType.toString());
+          if (type == 'create') {
+            context.read<ActionModel>().insertActionList(0, body['data']);
+          } else if (type == 'edit') {
+            context
+                .read<ActionModel>()
+                .replaceActionList(index, index + 1, [body['data']]);
+          }
+          Navigator.pop(
+            context,
+          );
+        } else {
+          Scaffold.of(ctx).showSnackBar(SnackBar(
+              content: Text('失败'),
+              action: SnackBarAction(
+                label: '知道了',
+                onPressed: () {
+                  Scaffold.of(ctx).removeCurrentSnackBar();
+                },
+              )));
+        }
+      } else {
+        Scaffold.of(ctx).showSnackBar(SnackBar(
+            content: Text('网络错误'),
+            action: SnackBarAction(
+              label: '知道了',
+              onPressed: () {
+                Scaffold.of(ctx).removeCurrentSnackBar();
+              },
+            )));
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  deleteAction(ctx) async {
+    try {
+      var response;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
+      Map<String, dynamic> userInfo = jsonDecode(userInfoString);
+      response = await http.post("${SURL.deleteUserAction}", body: {
+        'actionID': userInfo['UserID'],
+      });
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body['status'] == 0) {
+          context
+              .read<ActionModel>()
+              .deleteActionList(widget.index, widget.index + 1);
           Navigator.pop(
             context,
           );
@@ -85,7 +143,7 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
     super.initState();
     if (this.widget.type == 'edit') {
       var actionInfo = this.widget.actionInfo;
-      print(actionInfo);
+      // print(actionInfo);
       _actionNameController.text = actionInfo['ActionName'] ?? '';
       _actionDetailsController.text = actionInfo['ActionDetails'] ?? '';
       _actionType = actionInfo['ActionType'] ?? '';
@@ -231,15 +289,22 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
                       // ),
                       FlatButton(
                         textColor: Colors.red,
+                        child: Text('删除'),
+                        onPressed: () {
+                          deleteAction(ctx);
+                        },
+                      ),
+                      FlatButton(
+                        textColor: Colors.red,
                         child: Text('取消'),
                         onPressed: () {
                           Navigator.pop(context);
                         },
                       ),
                       FlatButton(
-                        child: Text('新建'),
+                        child: Text('${widget.type == 'create' ? '新建' : '修改'}'),
                         onPressed: () {
-                          addAction(ctx);
+                          updateAction(ctx);
                         },
                       ),
                     ],

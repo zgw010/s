@@ -21,6 +21,7 @@ class _DataDetailsPageState extends State<DataDetailsPage> {
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       response = await http.get(
         "${SURL.getData}?userID=${userInfo['UserID'] ?? ''}",

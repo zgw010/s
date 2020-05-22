@@ -24,14 +24,14 @@ class _ActionListPageState extends State<ActionListPage> {
     'base': '基础动作',
   };
   var dropdownValue = 'all';
-  var actionList = <Widget>[];
+  // var list = [];
+  // var state;
   getActionList(actionType) async {
     var response;
-    var state;
-    var newActionList = <Widget>[];
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       response = await http.get(
         "${SURL.getActionList}?userID=${userInfo['UserID'] ?? ''}&actionType=$actionType",
@@ -40,81 +40,17 @@ class _ActionListPageState extends State<ActionListPage> {
       if (response.statusCode == 200) {
         // print(response.body.runtimeType.toString());
         final body = jsonDecode(response.body);
-        print(body);
+        // print(body);
         // print("${SURL.getActionList}?userID=${userInfo['UserID'] ?? ''}&actionType=$dropdownValue");
-        setState(() {
-          state = body['status'];
-        });
+        // setState(() {
+        //   state = body['status'];
+        // });
         if (body['status'] == 0) {
-          final data = body['data'];
-
-          List<dynamic> list = data;
-          for (int i = 0; i < list.length; i++) {
-            // print(list[i]['ActionName']);
-            if (list[i]['ActionType'] == 'base-times' ||
-                list[i]['ActionType'] == 'base-time' ||
-                list[i]['ActionType'] == 'base-onlytime') {
-              newActionList.add(new Container(
-                  height: 50,
-                  child: Center(
-                    child: Row(children: <Widget>[
-                      Expanded(
-                          child: Container(
-                              width: 210, child: Text(list[i]['ActionName']))),
-                      FlatButton(
-                        // textColor: Colors.red,
-                        child: Text(
-                          '查看',
-                          style: TextStyle(
-                            color: Colors.blueAccent[400],
-                            fontSize: 12.0,
-                          ),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) =>
-                                    ActionDetailsPage(actionData: list[i])),
-                          );
-                        },
-                      ),
-                    ]),
-                  )));
-            } else {
-              newActionList.add(Container(
-                height: 50,
-                child: Row(children: <Widget>[
-                  Expanded(
-                      child: Container(
-                          width: 210, child: Text(list[i]['ActionName']))),
-                  FlatButton(
-                    // textColor: Colors.red,
-                    child: Text(
-                      '修改',
-                      style: TextStyle(
-                        color: Colors.blueAccent[400],
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) => UpdateActionPage(
-                                  type: 'edit',
-                                  actionInfo: list[i],
-                                )),
-                      );
-                    },
-                  ),
-                ]),
-              ));
-            }
-          }
-          setState(() {
-            actionList = newActionList;
-          });
+          List<dynamic> data = body['data'];
+          // setState(() {
+          //   list = data;
+          // });
+          context.read<ActionModel>().updateActionList(data);
         }
       }
     } catch (e) {
@@ -130,6 +66,69 @@ class _ActionListPageState extends State<ActionListPage> {
 
   @override
   Widget build(BuildContext context) {
+    var list = context.watch<ActionModel>().actionList;
+    var actionListWidget = <Widget>[];
+    for (int i = 0; i < list.length; i++) {
+      // print(list[i]['ActionName']);
+      if (list[i]['ActionType'] == 'base-times' ||
+          list[i]['ActionType'] == 'base-time' ||
+          list[i]['ActionType'] == 'base-onlytime') {
+        actionListWidget.add(new Container(
+            height: 50,
+            child: Center(
+              child: Row(children: <Widget>[
+                Expanded(
+                    child: Container(
+                        width: 210, child: Text(list[i]['ActionName']))),
+                FlatButton(
+                  // textColor: Colors.red,
+                  child: Text(
+                    '查看',
+                    style: TextStyle(
+                      color: Colors.blueAccent[400],
+                      fontSize: 12.0,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) =>
+                              ActionDetailsPage(actionData: list[i])),
+                    );
+                  },
+                ),
+              ]),
+            )));
+      } else {
+        actionListWidget.add(Container(
+          height: 50,
+          child: Row(children: <Widget>[
+            Expanded(
+                child:
+                    Container(width: 210, child: Text(list[i]['ActionName']))),
+            FlatButton(
+              // textColor: Colors.red,
+              child: Text(
+                '修改',
+                style: TextStyle(
+                  color: Colors.blueAccent[400],
+                  fontSize: 12.0,
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(
+                      builder: (context) => UpdateActionPage(
+                          type: 'edit', actionInfo: list[i], index: i)),
+                );
+              },
+            ),
+          ]),
+        ));
+      }
+    }
     return Scaffold(
       appBar: AppBar(title: Text("动作列表")),
       body: Container(
@@ -166,7 +165,7 @@ class _ActionListPageState extends State<ActionListPage> {
               Expanded(
                 child: ListView(
                   // padding: const EdgeInsets.all(4),
-                  children: this.actionList,
+                  children: actionListWidget,
                 ),
               ),
 
@@ -176,7 +175,7 @@ class _ActionListPageState extends State<ActionListPage> {
                     // textColor: Colors.red,
                     child: Text('新建动作'),
                     onPressed: () {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         new MaterialPageRoute(
                             builder: (context) => UpdateActionPage(

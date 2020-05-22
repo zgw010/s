@@ -16,7 +16,7 @@ class UserInfoPage extends StatefulWidget {
 class _UserInfoPageState extends State<UserInfoPage> {
   deleteUserInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('userInfo', '');
+    prefs.setString('userInfo', '{}');
     context.read<UserInfoModel>().updateUserInfo('{}');
     Navigator.push(
       context,
@@ -26,12 +26,6 @@ class _UserInfoPageState extends State<UserInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    // if (context.watch<UserInfoModel>().userInfo['UserName'] == '') {
-    //   Navigator.push(
-    //     context,
-    //     new MaterialPageRoute(builder: (context) => LoginPage()),
-    //   );
-    // }
     return Container(
       margin: EdgeInsets.only(top: 30.0, left: 20.0, right: 20.0), //容器外填充
       child: Column(
@@ -232,23 +226,34 @@ class _UserInfoPageState extends State<UserInfoPage> {
           ),
           ButtonBar(
             children: <Widget>[
-              FlatButton(
-                textColor: Colors.red,
-                child: Text('退出'),
-                onPressed: () {
-                  deleteUserInfo();
-                },
-              ),
-              FlatButton(
-                child: Text('编辑'),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    new MaterialPageRoute(builder: (context) => Register(type: 'edit')),
-                  );
-                },
-              ),
-              context.watch<UserInfoModel>().userInfo['UserName'] == ''
+              !(context.watch<UserInfoModel>().userInfo['UserName'] == '' ||
+                      context.watch<UserInfoModel>().userInfo['UserName'] ==
+                          null)
+                  ? FlatButton(
+                      textColor: Colors.red,
+                      child: Text('退出'),
+                      onPressed: () {
+                        deleteUserInfo();
+                      },
+                    )
+                  : Text(''),
+              !(context.watch<UserInfoModel>().userInfo['UserName'] == '' ||
+                      context.watch<UserInfoModel>().userInfo['UserName'] ==
+                          null)
+                  ? FlatButton(
+                      child: Text('编辑'),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => Register(type: 'edit')),
+                        );
+                      },
+                    )
+                  : Text(''),
+              context.watch<UserInfoModel>().userInfo['UserName'] == '' ||
+                      context.watch<UserInfoModel>().userInfo['UserName'] ==
+                          null
                   ? FlatButton(
                       child: Text('登录'),
                       onPressed: () {

@@ -26,6 +26,7 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       var response = await http.get(
         "${SURL.getPlanList}?userID=${userInfo['UserID'] ?? ''}",
@@ -67,6 +68,7 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       if (this.widget.type == 'create') {
         response = await http.post("${SURL.addPlanGroup}", body: {

@@ -35,6 +35,7 @@ class _PlanGroupListPageState extends State<PlanGroupListPage> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       response = await http.get(
         "${SURL.getPlanGroupList}?userID=${userInfo['UserID'] ?? ''}",

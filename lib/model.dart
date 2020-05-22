@@ -2,27 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-// import 'package:flutter/foundation.dart';
-// class Counter with ChangeNotifier, DiagnosticableTreeMixin {
-class UserIDModel with ChangeNotifier {
-  String _localUserID = '';
-  String get localUserID => _localUserID;
-
-  void updateLocalUserID(newLocalUserID) {
-    _localUserID = newLocalUserID;
-    notifyListeners();
-  }
-}
-
 class SURL {
   static String host = 'https://www.iyyq.top/api/s';
   static String login = '$host/login';
   static String register = '$host/register';
   static String edit = '$host/edit';
   static String getCurPlan = '$host/plan/get_cur_plan';
+
+  // action
   static String getActionList = '$host/action/get_action_list';
   static String addUserAction = '$host/action/add_user_action';
   static String updateUserAction = '$host/action/update_user_action';
+  static String deleteUserAction = '$host/action/delete_user_action';
 
   // plan
   static String getPlanList = '$host/plan/get_plan_list';
@@ -60,31 +51,69 @@ class UserInfoModel with ChangeNotifier {
   Map<String, dynamic> get userInfo => _userInfo;
 
   void updateUserInfo(newUserInfoString) {
+    // if (newUserInfoString != '' && newUserInfoString != '{}') {
     Map<String, dynamic> newUserInfo = jsonDecode(newUserInfoString);
     // print(newUserInfo);
     _userInfo = newUserInfo;
+    notifyListeners();
+    // }
+  }
+}
+
+class ActionModel with ChangeNotifier {
+  List<dynamic> _actionList = [];
+  List<dynamic> get actionList => _actionList;
+
+  void updateActionList(list) {
+    _actionList = list;
+    notifyListeners();
+  }
+
+  void insertActionList(index, item) {
+    _actionList.insert(index, item);
+    notifyListeners();
+  }
+
+  void replaceActionList(start, end, item) {
+    _actionList.replaceRange(start, end, item);
+    notifyListeners();
+  }
+
+  void deleteActionList(start, end) {
+    _actionList.removeRange(start, end);
     notifyListeners();
   }
 }
 
 class PlanModel with ChangeNotifier {
-  var _curPlan = {};
+  Map<String, dynamic> _curPlan = {};
+  Map<String, dynamic> _curPlanGroup = {};
+  List<Map<String, dynamic>> _planList = [];
   Map<String, dynamic> get curPlan => _curPlan;
+  Map<String, dynamic> get curPlanGroup => _curPlanGroup;
+  List<Map<String, dynamic>> get planList => _planList;
 
-  void updateCurplan(newCurplan) {
-    var newPlan = jsonDecode(newCurplan);
-    // print(newPlan);
+  void updateCurplan(plan) {
+    var newPlan = jsonDecode(plan);
     _curPlan = newPlan;
     notifyListeners();
   }
-}
 
-class ActionModel with ChangeNotifier {
-  List<Map<String, dynamic>> _actionList;
-  List<Map<String, dynamic>> get actionList => _actionList;
+  void updateCurplanGroup(planGroup) {
+    var newPlanGroup = jsonDecode(planGroup);
+    _curPlanGroup = newPlanGroup;
+    notifyListeners();
+  }
 
-  void updateActionList(newActionList) {
-    _actionList = jsonDecode(newActionList);
+  void updatePlanList(list) {
+    var newPlanList = jsonDecode(list);
+    _planList = newPlanList;
+    notifyListeners();
+  }
+
+  void addPlanList(item) {
+    // var newPlanList = jsonDecode(item);
+    _planList.add(item);
     notifyListeners();
   }
 }

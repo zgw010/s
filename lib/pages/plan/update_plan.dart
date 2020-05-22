@@ -31,6 +31,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       var response = await http.get(
         "${SURL.getActionList}?userID=${userInfo['UserID'] ?? ''}&actionType=all",
@@ -86,6 +87,7 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
       if (this.widget.type == 'create') {
         response = await http.post("${SURL.addPlan}", body: {
@@ -144,13 +146,15 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
             height: 50,
             child: Center(
               child: Row(children: <Widget>[
-                Container(
-                    width: 210,
-                    child: Text(planDetailsList[i]['ActionName'].toString() +
-                        ' ' +
-                        planDetailsList[i]['ActionGroupsNum'].toString() +
-                        'x' +
-                        planDetailsList[i]['ActionTimes'].toString())),
+                Expanded(
+                    child: Container(
+                        width: 210,
+                        child: Text(planDetailsList[i]['ActionName']
+                                .toString() +
+                            ' ' +
+                            planDetailsList[i]['ActionGroupsNum'].toString() +
+                            'x' +
+                            planDetailsList[i]['ActionTimes'].toString()))),
                 FlatButton(
                     // textColor: Colors.red,
                     child: Text(
@@ -172,12 +176,14 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
             height: 50,
             child: Center(
               child: Row(children: <Widget>[
-                Container(
-                    width: 210,
-                    child: Text(planDetailsList[i]['ActionName'].toString() +
-                        ' ' +
-                        planDetailsList[i]['ActionTime'].toString() +
-                        '分钟')),
+                Expanded(
+                    child: Container(
+                        width: 210,
+                        child: Text(
+                            planDetailsList[i]['ActionName'].toString() +
+                                ' ' +
+                                planDetailsList[i]['ActionTime'].toString() +
+                                '分钟'))),
                 FlatButton(
                   // textColor: Colors.red,
                   child: Text(
@@ -200,12 +206,14 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
             height: 50,
             child: Center(
               child: Row(children: <Widget>[
-                Container(
-                    width: 210,
-                    child: Text(planDetailsList[i]['ActionName'].toString() +
-                        ' ' +
-                        planDetailsList[i]['ActionDistance'].toString() +
-                        '米')),
+                Expanded(
+                    child: Container(
+                        width: 210,
+                        child: Text(planDetailsList[i]['ActionName']
+                                .toString() +
+                            ' ' +
+                            planDetailsList[i]['ActionDistance'].toString() +
+                            '米'))),
                 FlatButton(
                   // textColor: Colors.red,
                   child: Text(
@@ -539,7 +547,9 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                   FlatButton(
                     textColor: Colors.red,
                     child: Text('取消'),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
                   FlatButton(
                     textColor: Colors.red,
