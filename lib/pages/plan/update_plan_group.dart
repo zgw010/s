@@ -8,9 +8,11 @@ import '../../model.dart';
 import 'package:provider/provider.dart';
 
 class UpdatePlanGroupPage extends StatefulWidget {
-  UpdatePlanGroupPage({Key key, this.type = 'create', this.planGroupInfo})
+  UpdatePlanGroupPage(
+      {Key key, this.type = 'create', this.planGroupInfo, this.index})
       : super(key: key);
-  final type;
+  String type;
+  int index;
   final planGroupInfo;
   @override
   _UpdatePlanGroupPageState createState() => _UpdatePlanGroupPageState();
@@ -18,7 +20,7 @@ class UpdatePlanGroupPage extends StatefulWidget {
 
 class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
   String dropdownValue = '';
-  final _planNameController = TextEditingController();
+  final _planGroupNameController = TextEditingController();
   var planGroupDetailsList = [];
   List<Map<String, dynamic>> planList;
 
@@ -65,41 +67,64 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
 
   updatePlan() async {
     try {
+      String type = widget.type;
+      int index = widget.index;
+      var planGroupInfo = widget.planGroupInfo;
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
       if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
-      if (this.widget.type == 'create') {
+      if (type == 'create') {
         response = await http.post("${SURL.addPlanGroup}", body: {
           'userID': userInfo['UserID'],
-          'planGroupName': _planNameController.text,
-          'planGroupDetails': jsonEncode(planGroupDetailsList),
+          'planName': _planGroupNameController.text,
+          'planDetails': jsonEncode(planGroupDetailsList),
         });
-      } else if (this.widget.type == 'edit') {
+      } else if (type == 'edit') {
         response = await http.post("${SURL.updatePlanGroup}", body: {
-          'userID': userInfo['UserID'],
-          // 'planID': userInfo['UserID'],
+          'planID': planGroupInfo['PlanID'],
+          'planName': _planGroupNameController.text,
+          'planDetails': jsonEncode(planGroupDetailsList),
         });
       }
 
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         if (body['status'] == 0) {
+          if (type == 'create') {
+            context.read<PlanModel>().insertPlan(0, body['data']);
+          } else if (type == 'edit') {
+            context
+                .read<PlanModel>()
+                .replacePlan(index, index + 1, [body['data']]);
+          }
           Navigator.pop(
             context,
           );
         } else {}
-      } else {
-        // Scaffold.of(ctx).showSnackBar(SnackBar(
-        //     content: Text('网络错误'),
-        //     action: SnackBarAction(
-        //       label: '知道了',
-        //       onPressed: () {
-        //         Scaffold.of(ctx).removeCurrentSnackBar();
-        //       },
-        //     )));
-      }
+      } else {}
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  deletePlan() async {
+    try {
+      int index = widget.index;
+      var planInfo = widget.planGroupInfo;
+      var response = await http.post("${SURL.deletePlan}", body: {
+        'planID': planInfo['PlanID'],
+      });
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body['status'] == 0) {
+          context.read<PlanModel>().deletePlan(index, index + 1);
+          Navigator.pop(
+            context,
+          );
+        } else {}
+      } else {}
     } catch (e) {
       print(e);
     }
@@ -111,7 +136,7 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
     getPlanList();
     if (widget.type == 'edit') {
       var planGroupInfo = widget.planGroupInfo;
-      _planNameController.text = planGroupInfo['PlanGroupName'];
+      _planGroupNameController.text = planGroupInfo['PlanGroupName'];
       // print(planGroupInfo);
       // print(planGroupInfo['PlanGroupDetails']);
       // print(planGroupInfo.runtimeType.toString());
@@ -128,7 +153,9 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
           height: 50,
           child: Center(
             child: Row(children: <Widget>[
-              Container(width: 210, child: Text(plan['PlanName'].toString())),
+              Expanded(
+                  child: Container(
+                      width: 210, child: Text(plan['PlanName'].toString()))),
               FlatButton(
                   // textColor: Colors.red,
                   child: Text(
@@ -244,7 +271,7 @@ class _UpdatePlanGroupPageState extends State<UpdatePlanGroupPage> {
                         ),
                         Expanded(
                           child: TextField(
-                            controller: _planNameController,
+                            controller: _planGroupNameController,
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               filled: true,

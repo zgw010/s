@@ -3,14 +3,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:s/pages/plan/plan_details.dart';
 import 'package:s/pages/plan/plan_group_list.dart';
-import 'package:s/pages/plan/update_action.dart';
 import 'package:s/pages/plan/update_plan.dart';
 import '../../model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'action_details.dart';
 import 'action_list.dart';
 
 class PlanListPage extends StatefulWidget {
@@ -25,13 +22,10 @@ class _PlanListPageState extends State<PlanListPage> {
     'user': '用户自定义动作',
     'base': '基础动作',
   };
-  var dropdownValue = 'all';
-  var planList = <Widget>[];
-  getPlanList(actionType) async {
-    var response;
-    var state;
-    var newPlanList = <Widget>[];
+  // var dropdownValue = 'all';
+  getPlanList() async {
     try {
+      var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
       if (userInfoString == '') return;
@@ -41,48 +35,8 @@ class _PlanListPageState extends State<PlanListPage> {
       );
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
-        // print(body);
-        // setState(() {
-        //   state = body['status'];
-        // });
         if (body['status'] == 0) {
-          var list = body['data'];
-          // List<Map<String, dynamic>> list = data;
-
-          for (int i = 0; i < list.length; i++) {
-            newPlanList.add(new Container(
-                height: 50,
-                child: Center(
-                  child: Row(children: <Widget>[
-                    Expanded(
-                      child: Container(
-                          width: 210, child: Text(list[i]['PlanName'])),
-                    ),
-                    FlatButton(
-                      child: Text(
-                        '查看',
-                        style: TextStyle(
-                          color: Colors.blueAccent[400],
-                          fontSize: 12.0,
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                              builder: (context) => UpdatePlanPage(
-                                    type: 'edit',
-                                    planInfo: list[i],
-                                  )),
-                        );
-                      },
-                    ),
-                  ]),
-                )));
-          }
-          setState(() {
-            planList = newPlanList;
-          });
+          context.read<PlanModel>().updatePlanList(body['data']);
         }
       }
     } catch (e) {
@@ -93,11 +47,45 @@ class _PlanListPageState extends State<PlanListPage> {
   @override
   void initState() {
     super.initState();
-    getPlanList(dropdownValue);
+    getPlanList();
   }
 
   @override
   Widget build(BuildContext context) {
+    var planList = context.watch<PlanModel>().planList;
+    var planListWidget = <Widget>[];
+    for (int i = 0; i < planList.length; i++) {
+      planListWidget.add(new Container(
+          height: 50,
+          child: Center(
+            child: Row(children: <Widget>[
+              Expanded(
+                child:
+                    Container(width: 210, child: Text(planList[i]['PlanName'])),
+              ),
+              FlatButton(
+                child: Text(
+                  '查看',
+                  style: TextStyle(
+                    color: Colors.blueAccent[400],
+                    fontSize: 12.0,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => UpdatePlanPage(
+                              type: 'edit',
+                              planInfo: planList[i],
+                              index: i,
+                            )),
+                  );
+                },
+              ),
+            ]),
+          )));
+    }
     return Scaffold(
       appBar: AppBar(title: Text("计划列表")),
       body: Container(
@@ -107,7 +95,7 @@ class _PlanListPageState extends State<PlanListPage> {
               Expanded(
                 child: ListView(
                   // padding: const EdgeInsets.all(4),
-                  children: planList,
+                  children: planListWidget,
                 ),
               ),
               ButtonBar(

@@ -8,9 +8,10 @@ import '../../model.dart';
 import 'package:provider/provider.dart';
 
 class UpdatePlanPage extends StatefulWidget {
-  UpdatePlanPage({Key key, this.type = 'create', this.planInfo})
+  UpdatePlanPage({Key key, this.type = 'create', this.planInfo, this.index})
       : super(key: key);
-  final type;
+  String type;
+  int index;
   final planInfo;
   @override
   _UpdatePlanPageState createState() => _UpdatePlanPageState();
@@ -84,41 +85,65 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
 
   updatePlan() async {
     try {
+      String type = widget.type;
+      int index = widget.index;
+      var planInfo = widget.planInfo;
       var response;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       var userInfoString = prefs.getString('userInfo');
       if (userInfoString == '') return;
       Map<String, dynamic> userInfo = jsonDecode(userInfoString);
-      if (this.widget.type == 'create') {
+      if (type == 'create') {
         response = await http.post("${SURL.addPlan}", body: {
           'userID': userInfo['UserID'],
           'planName': _planNameController.text,
           'planDetails': jsonEncode(planDetailsList),
         });
-      } else if (this.widget.type == 'edit') {
+      } else if (type == 'edit') {
         response = await http.post("${SURL.updatePlan}", body: {
-          'userID': userInfo['UserID'],
-          // 'planID': userInfo['UserID'],
+          'planID': planInfo['PlanID'],
+          'planName': _planNameController.text,
+          'planDetails': jsonEncode(planDetailsList),
         });
       }
 
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         if (body['status'] == 0) {
+          if (type == 'create') {
+            context.read<PlanModel>().insertPlan(0, body['data']);
+          } else if (type == 'edit') {
+            context
+                .read<PlanModel>()
+                .replacePlan(index, index + 1, [body['data']]);
+          }
           Navigator.pop(
             context,
           );
         } else {}
       } else {
-        // Scaffold.of(ctx).showSnackBar(SnackBar(
-        //     content: Text('网络错误'),
-        //     action: SnackBarAction(
-        //       label: '知道了',
-        //       onPressed: () {
-        //         Scaffold.of(ctx).removeCurrentSnackBar();
-        //       },
-        //     )));
       }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  deletePlan() async {
+    try {
+      int index = widget.index;
+      var planInfo = widget.planInfo;
+      var response = await http.post("${SURL.deletePlan}", body: {
+        'planID': planInfo['PlanID'],
+      });
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (body['status'] == 0) {
+          context.read<PlanModel>().deletePlan(index, index + 1);
+          Navigator.pop(
+            context,
+          );
+        } else {}
+      } else {}
     } catch (e) {
       print(e);
     }
@@ -554,7 +579,9 @@ class _UpdatePlanPageState extends State<UpdatePlanPage> {
                   FlatButton(
                     textColor: Colors.red,
                     child: Text('删除'),
-                    onPressed: () {},
+                    onPressed: () {
+                      deletePlan();
+                    },
                   ),
                   FlatButton(
                     child: Text('确定'),

@@ -26,6 +26,7 @@ void main() {
       // Provider.value(value: counter),
       ChangeNotifierProvider(create: (_) => UserInfoModel()),
       ChangeNotifierProvider(create: (_) => ActionModel()),
+      ChangeNotifierProvider(create: (_) => PlanModel()),
     ],
     child: MyApp(),
   ));

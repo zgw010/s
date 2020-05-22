@@ -19,11 +19,13 @@ class SURL {
   static String getPlanList = '$host/plan/get_plan_list';
   static String addPlan = '$host/plan/add_plan';
   static String updatePlan = '$host/plan/update_plan';
+  static String deletePlan = '$host/plan/delete_plan';
 
   // planGroup
   static String getPlanGroupList = '$host/plan/get_plan_group_list';
   static String addPlanGroup = '$host/plan/add_plan_group';
   static String updatePlanGroup = '$host/plan/update_plan_group';
+  static String deletePlanGroup = '$host/plan/delete_plan_group';
 
   // data
   static String getData = '$host/data/get_data';
@@ -89,6 +91,9 @@ class PlanModel with ChangeNotifier {
   List<dynamic> _planList = [];
   List<dynamic> get planList => _planList;
 
+  List<dynamic> _planGroupList = [];
+  List<dynamic> get planGroupList => _planGroupList;
+
   void updatePlanList(list) {
     _planList = list;
     notifyListeners();
@@ -106,6 +111,26 @@ class PlanModel with ChangeNotifier {
 
   void deletePlan(start, end) {
     _planList.removeRange(start, end);
+    notifyListeners();
+  }
+
+  void updatePlanGroupList(list) {
+    _planGroupList = list;
+    notifyListeners();
+  }
+
+  void insertPlanGroup(index, item) {
+    _planGroupList.insert(index, item);
+    notifyListeners();
+  }
+
+  void replacePlanGroup(start, end, item) {
+    _planGroupList.replaceRange(start, end, item);
+    notifyListeners();
+  }
+
+  void deletePlanGroup(start, end) {
+    _planGroupList.removeRange(start, end);
     notifyListeners();
   }
 }

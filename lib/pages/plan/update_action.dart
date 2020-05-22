@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:s/pages/plan/update_action.dart';
 import '../../model.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -45,7 +44,6 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
         });
       } else if (type == 'edit') {
         response = await http.post("${SURL.updateUserAction}", body: {
-          // 'userID': userInfo['UserID'],
           'actionID': this.widget.actionInfo['ActionID'],
           'actionName': _actionNameController.text,
           'actionDetails': _actionDetailsController.text,
@@ -56,8 +54,6 @@ class _UpdateActionPageState extends State<UpdateActionPage> {
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         if (body['status'] == 0) {
-          // print('action');
-          // print(body['data'].runtimeType.toString());
           if (type == 'create') {
             context.read<ActionModel>().insertAction(0, body['data']);
           } else if (type == 'edit') {
