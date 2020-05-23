@@ -104,6 +104,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(title: Text('注册')),
         body: Builder(
             builder: (ctx) => Container(
                   margin: EdgeInsets.only(

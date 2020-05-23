@@ -69,71 +69,73 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(title: Text('登录')),
         body: Builder(
-      builder: (ctx) => (ListView(
-        padding: EdgeInsets.symmetric(horizontal: 24.0),
-        children: <Widget>[
-          SizedBox(height: 80.0),
-          Column(
+          builder: (ctx) => (ListView(
+            padding: EdgeInsets.symmetric(horizontal: 24.0),
             children: <Widget>[
-              Image.asset('assets/icon64.png'),
-              // Icon(Icons.fitness_center),
-              SizedBox(height: 16.0),
-              // Text('S'),
+              // SizedBox(height: 80.0),
+              // Column(
+              //   children: <Widget>[
+              //     // Image.asset('assets/icon64.png',
+              //     //     height: 64.0, width: 64.0, fit: BoxFit.cover),
+              //     Icon(Icons.fitness_center),
+              //     SizedBox(height: 16.0),
+              //     // Text('S'),
+              //   ],
+              // ),
+              SizedBox(height: 200.0),
+              TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  filled: true,
+                  labelText: 'Username',
+                ),
+              ),
+              SizedBox(height: 12.0),
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  filled: true,
+                  labelText: 'Password',
+                ),
+                obscureText: true,
+              ),
+              ButtonBar(
+                children: <Widget>[
+                  FlatButton(
+                    textColor: Colors.red,
+                    child: Text('取消'),
+                    onPressed: () {
+                      _usernameController.clear();
+                      _passwordController.clear();
+                      // final localUserID =
+                      //     context.read<UserInfoModel>().userInfo['UserID'];
+                      // if (localUserID != '' && localUserID != null) {
+                      Navigator.pop(context);
+                      // }
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('注册'),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        new MaterialPageRoute(builder: (context) => Register()),
+                      );
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('登录'),
+                    onPressed: () {
+                      login(ctx, _usernameController.text,
+                          _passwordController.text);
+                    },
+                  ),
+                ],
+              ),
             ],
-          ),
-          SizedBox(height: 120.0),
-          TextField(
-            controller: _usernameController,
-            decoration: InputDecoration(
-              filled: true,
-              labelText: 'Username',
-            ),
-          ),
-          SizedBox(height: 12.0),
-          TextField(
-            controller: _passwordController,
-            decoration: InputDecoration(
-              filled: true,
-              labelText: 'Password',
-            ),
-            obscureText: true,
-          ),
-          ButtonBar(
-            children: <Widget>[
-              FlatButton(
-                textColor: Colors.red,
-                child: Text('取消'),
-                onPressed: () {
-                  _usernameController.clear();
-                  _passwordController.clear();
-                  // final localUserID =
-                  //     context.read<UserInfoModel>().userInfo['UserID'];
-                  // if (localUserID != '' && localUserID != null) {
-                  Navigator.pop(context);
-                  // }
-                },
-              ),
-              FlatButton(
-                child: Text('注册'),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    new MaterialPageRoute(builder: (context) => Register()),
-                  );
-                },
-              ),
-              FlatButton(
-                child: Text('登录'),
-                onPressed: () {
-                  login(
-                      ctx, _usernameController.text, _passwordController.text);
-                },
-              ),
-            ],
-          ),
-        ],
-      )),
-    ));
+          )),
+        ));
   }
 }

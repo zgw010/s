@@ -23,11 +23,11 @@ class _PlanState extends State<Plan> {
 
   getCurPlan() async {
     try {
-      // SharedPreferences prefs = await SharedPreferences.getInstance();
-      // var userInfoString = prefs.getString('userInfo');
-      // if (userInfoString == '') return;
-      // Map<String, dynamic> userInfo = jsonDecode(userInfoString);
-      Map<String, dynamic> userInfo = context.read<UserInfoModel>().userInfo;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var userInfoString = prefs.getString('userInfo');
+      if (userInfoString == '') return;
+      Map<String, dynamic> userInfo = jsonDecode(userInfoString);
+      // Map<String, dynamic> userInfo = context.read<UserInfoModel>().userInfo;
       // print({
       //   'getCurPlan',
       //   userInfo
@@ -113,12 +113,12 @@ class _PlanState extends State<Plan> {
     getCurPlan();
   }
 
-  @override
-  void didUpdateWidget(var oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // print('didUpdateWidget');
-    getCurPlan();
-  }
+  // @override
+  // void didUpdateWidget(var oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   // print('didUpdateWidget');
+  //   // getCurPlan();
+  // }
 
   @override
   Widget build(BuildContext context) {
